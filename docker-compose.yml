@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: testing_portal_web
+    depends_on:
+      - db
+    environment:
+      DB_HOST: testing_portal_db
+      DB_PORT: 3310
+      DB_NAME: testing_portal_db
+      DB_USER: root
+      DB_PASSWORD: 12345678
+      PHP_LOGS_PATH: /var/log/apache2/php.log
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - "8000:80"
+
+  db:
+    image: mysql:8.1.0
+    container_name: testing_portal_db
+    environment:
+      MYSQL_DATABASE: testing_portal_db
+      MYSQL_TCP_PORT: 3310
+      MYSQL_ROOT_PASSWORD: 12345678
+    volumes:
+      - ./init_db:/docker-entrypoint-initdb.d
+    ports:
+      - "3310:3310"
+
+  phpmyadmin:
+    image: phpmyadmin:5.2.1
+    container_name: phpmyadmin
+    depends_on:
+      - db
+    links:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3310
+    ports:
+      - "9000:80"
