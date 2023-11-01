@@ -9,12 +9,17 @@ services:
     depends_on:
       - db
     environment:
+      PHP_LOGS_PATH: /var/log/apache2/php.log
+      SMTP_HOST: <SMTP_HOST>
+      SMTP_PORT: 465
+      SMTP_USER: <SMTP_USER>
+      SMTP_PASSWORD: <SMTP_PASSWORD>
+      DOMAIN_FOR_CONFIRMATION: http://localhost:8000
       DB_HOST: testing_portal_db
       DB_PORT: 3310
       DB_NAME: testing_portal_db
       DB_USER: root
-      DB_PASSWORD: 12345678
-      PHP_LOGS_PATH: /var/log/apache2/php.log
+      DB_PASSWORD: <DB_PASSWORD>
     volumes:
       - ./:/var/www/html
     ports:
@@ -26,7 +31,7 @@ services:
     environment:
       MYSQL_DATABASE: testing_portal_db
       MYSQL_TCP_PORT: 3310
-      MYSQL_ROOT_PASSWORD: 12345678
+      MYSQL_ROOT_PASSWORD: <DB_PASSWORD>
     volumes:
       - ./init_db:/docker-entrypoint-initdb.d
     ports:

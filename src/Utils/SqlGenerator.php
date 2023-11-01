@@ -26,6 +26,17 @@ class SqlGenerator
             . ')';
     }
 
+    public static function generateUpdateSql(Entity $entity, array $variables): string
+    {
+        $variables = isset($variables['where']) ? $variables['where'] : $variables;
+        return 'UPDATE '
+            . self::getTableName($entity)
+            . ' SET '
+            . join(', ', array_map(fn($column, $value) => $column . ' = :' . $column, self::getTableColumns($entity), self::getTableColumns($entity)))
+            . ' WHERE '
+            . join(' AND ', array_map(fn($column, $value) => $column . ' = :WHERE_' . $column, array_keys($variables), $variables));
+    }
+
     public static function getEntityPropertyValue(Entity $entity, string $property): mixed
     {
         $getter = 'get' . ucwords($property);
@@ -40,9 +51,8 @@ class SqlGenerator
 
     private static function getTableColumns(Entity $entity): array
     {
-        $reflection = new \ReflectionClass($entity::class);
-        $properties = $reflection->getProperties();
-        return array_map(fn($property) => $property->getName(), $properties);
+        $properties = $entity->getModifiedProperties();
+        return array_map(fn($property) => $property, $properties);
     }
 
     private static function getTableBindings(Entity $entity): array

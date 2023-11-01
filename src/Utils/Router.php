@@ -11,23 +11,19 @@ class Router
         self::$list[] = [
             'uri' => $uri,
             'page' => $pageName,
-            'post' => false,
+            'isControllerHandled' => false,
         ];
     }
 
-    public static function post(string $uri, string $class, string $method): void
+    public static function controllerHandledRequest(string $uri, string $controllerClassName, string $controllerMethodName, array $data = null)
     {
         self::$list[] = [
             'uri' => $uri,
-            'class' => $class,
-            'method' => $method,
-            'post' => true,
+            'isControllerHandled' => true,
+            'controllerClassName' => $controllerClassName,
+            'controllerMethodName' => $controllerMethodName,
+            'data' => $data,
         ];
-    }
-
-    public static function error(string $errorMessage): void
-    {
-        require_once 'views/errors/error.php';
     }
 
     public static function enable(): void
@@ -36,10 +32,11 @@ class Router
 
         foreach (self::$list as $route) {
             if ($route['uri'] === '/' . $query) {
-                if ($route['post'] === true && $_SERVER['REQUEST_METHOD'] === 'POST') {
-                    $class = new $route['class'];
-                    $method = $route['method'];
-                    $class->$method($_POST);
+                if ($route['isControllerHandled'] === true) {
+                    $controllerInstance = new $route['controllerClassName'];
+                    $methodName = $route['controllerMethodName'];
+                    $data = $route['data'];
+                    $controllerInstance->$methodName($data);
                     die();
                 } else {
                     require_once 'views/pages/' . $route['page'] . '.php';
@@ -61,5 +58,10 @@ class Router
         setcookie('alert-type', $alertType, time() + 1, '/');
         setcookie('alert-message', $alertMessage, time() + 1, '/');
         self::redirect($uri);
+    }
+
+    public static function error(string $errorMessage): void
+    {
+        require_once 'views/errors/error.php';
     }
 }

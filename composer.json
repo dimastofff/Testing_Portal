@@ -5,6 +5,7 @@
         }
     },
     "require": {
-        "monolog/monolog": "^3.4"
+        "monolog/monolog": "^3.4",
+        "phpmailer/phpmailer": "^6.8"
     }
 }

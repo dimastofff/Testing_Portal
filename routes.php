@@ -8,8 +8,9 @@ Router::page('/login', 'login');
 Router::page('/registration','registration');
 Router::page('/profile', 'profile');
 
-Router::post('/auth/registration', AuthController::class, 'registration');
-Router::post('/auth/login', AuthController::class, 'login');
-Router::post('/auth/logout', AuthController::class, 'logout');
+Router::controllerHandledRequest('/auth/registration', AuthController::class, 'registration', $_POST);
+Router::controllerHandledRequest('/auth/login', AuthController::class, 'login', $_POST);
+Router::controllerHandledRequest('/auth/logout', AuthController::class, 'logout');
+Router::controllerHandledRequest('/auth/emailConfirmation', AuthController::class, 'emailConfirmation', $_REQUEST);
 
 Router::enable();

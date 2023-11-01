@@ -11,7 +11,8 @@ class EntityRepository
     {
         $entity = new $entityClassName();
         $sql = SqlGenerator::generateSelectSql($entity, $variables);
-        $statement = self::createStatementFromHash($sql, $variables);
+        $statement = self::createStatement($sql);
+        self::prepareStatementFromHash($statement, $variables);
         $statement->setFetchMode(\PDO::FETCH_CLASS, $entityClassName);
         $statement->execute();
         return $statement->fetchAll();
@@ -20,13 +21,18 @@ class EntityRepository
     public static function save(Entity $entity): bool
     {
         $sql = SqlGenerator::generateInsertSql($entity);
-        $statement = self::createStatementFromEntity($sql, $entity);
+        $statement = self::createStatement($sql);
+        self::prepareStatementFromEntity($statement, $entity);
         return $statement->execute();
     }
 
-    public static function update(Entity $entity): Entity
+    public static function update(Entity $entity, array $variables): bool
     {
-        return new Entity();
+        $sql = SqlGenerator::generateUpdateSql($entity, $variables);
+        $statement = self::createStatement($sql);
+        self::prepareStatementFromEntity($statement, $entity);
+        self::prepareStatementFromHash($statement, $variables);
+        return $statement->execute();
     }
 
     public static function deleteBy(string $entityClassName, array $variables): bool
@@ -34,23 +40,29 @@ class EntityRepository
         return true;
     }
 
-    private static function createStatementFromEntity(string $sql, Entity $entity) : \PDOStatement
+    private static function createStatement(string $sql): \PDOStatement
     {
-        $statement = $GLOBALS['PDO_CONNECTION']->prepare($sql);
-        $reflection = new \ReflectionClass($entity::class);
-        foreach ($reflection->getProperties() as $property) {
-            $propertyName = $property->getName();
-            $statement->bindValue(":".$propertyName, SqlGenerator::getEntityPropertyValue($entity, $property->getName()));
-        }
-        return $statement;
+        return $GLOBALS['PDO_CONNECTION']->prepare($sql);
     }
 
-    private static function createStatementFromHash(string $sql, array $variables) : \PDOStatement
+    private static function prepareStatementFromEntity(\PDOStatement $statement, Entity $entity) : void
     {
-        $statement = $GLOBALS['PDO_CONNECTION']->prepare($sql);
+        foreach ($entity->getModifiedProperties() as $propertyName) {
+            $statement->bindValue(":".$propertyName, SqlGenerator::getEntityPropertyValue($entity, $propertyName));
+        }
+    }
+
+    private static function prepareStatementFromHash(\PDOStatement $statement, array $variables) : void
+    {
+        if (isset($variables['where'])) {
+            $isWhereConditionBinding = true;
+            $variables = $variables['where'];
+        } else {
+            $isWhereConditionBinding = false;
+        }
         foreach ($variables as $column => $value) {
+            $column = $isWhereConditionBinding ? 'WHERE_' . $column : $column;
             $statement->bindValue(":" . $column, $value);
         }
-        return $statement;
     }
 }
