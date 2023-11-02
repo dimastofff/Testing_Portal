@@ -1,18 +1,11 @@
 {
-    "name": "dzmitry/testing_portal",
-    "description": "It is simple project for making tests and passing it. Tech stack: vanil PHP without frameworks, MySQL database. I write this project for starting learning PHP language.",
-    "type": "project",
-    "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Dzmitry\\TestingPortal\\": "src/"
+            "App\\": "src"
         }
     },
-    "authors": [
-        {
-            "name": "Dzmitry"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {}
+    "require": {
+        "monolog/monolog": "^3.4",
+        "phpmailer/phpmailer": "^6.8"
+    }
 }
