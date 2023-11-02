@@ -8,18 +8,19 @@ services:
     container_name: testing_portal_web
     depends_on:
       - db
+      - redis
     environment:
       PHP_LOGS_PATH: /var/log/apache2/php.log
-      SMTP_HOST: <SMTP_HOST>
+      SMTP_HOST: <DEFINE SMTP HOST>
       SMTP_PORT: 465
-      SMTP_USER: <SMTP_USER>
-      SMTP_PASSWORD: <SMTP_PASSWORD>
-      DOMAIN_FOR_CONFIRMATION: http://localhost:8000
+      SMTP_USER: <DEFINE SMTP USER>
+      SMTP_PASSWORD: <DEFINE SMTP PASSWORD>
+      DOMAIN_FOR_CONFIRMATION: <DEFINE DOMAIN FOR YOU SITE, IF RUNNING ON LOCALHOST - http://localhost:8000>
       DB_HOST: testing_portal_db
-      DB_PORT: 3310
+      DB_PORT: 3306
       DB_NAME: testing_portal_db
       DB_USER: root
-      DB_PASSWORD: <DB_PASSWORD>
+      DB_PASSWORD: <DEFINE DB PASSWORD>
     volumes:
       - ./:/var/www/html
     ports:
@@ -30,12 +31,11 @@ services:
     container_name: testing_portal_db
     environment:
       MYSQL_DATABASE: testing_portal_db
-      MYSQL_TCP_PORT: 3310
-      MYSQL_ROOT_PASSWORD: <DB_PASSWORD>
+      MYSQL_ROOT_PASSWORD: <DEFINE DB PASSWORD>
     volumes:
       - ./init_db:/docker-entrypoint-initdb.d
     ports:
-      - "3310:3310"
+      - "3306:3306"
 
   phpmyadmin:
     image: phpmyadmin:5.2.1
@@ -46,6 +46,11 @@ services:
       - db
     environment:
       PMA_HOST: db
-      PMA_PORT: 3310
     ports:
       - "9000:80"
+  
+  redis:
+    image: redis/redis-stack:7.2.0-v6
+    container_name: redis
+    ports:
+      - "9001:8001"

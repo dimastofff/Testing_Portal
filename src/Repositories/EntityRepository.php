@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Entity;
+use App\Models\User;
 use App\Utils\SqlGenerator;
 
 class EntityRepository
@@ -20,6 +21,9 @@ class EntityRepository
 
     public static function save(Entity $entity): bool
     {
+        $currentTimestamp = date('Y-m-d H:i:s', time());
+        $entity->setCreatedAt($currentTimestamp);
+        $entity->setUpdatedAt($currentTimestamp);
         $sql = SqlGenerator::generateInsertSql($entity);
         $statement = self::createStatement($sql);
         self::prepareStatementFromEntity($statement, $entity);
@@ -28,11 +32,16 @@ class EntityRepository
 
     public static function update(Entity $entity, array $variables): bool
     {
+        $entity->setUpdatedAt(date('Y-m-d H:i:s', time()));
         $sql = SqlGenerator::generateUpdateSql($entity, $variables);
         $statement = self::createStatement($sql);
         self::prepareStatementFromEntity($statement, $entity);
         self::prepareStatementFromHash($statement, $variables);
-        return $statement->execute();
+        $result = $statement->execute();
+        if ($result && $entity instanceof User) {
+            $entity->updateSessionTrigger();
+        }
+        return $result;
     }
 
     public static function deleteBy(string $entityClassName, array $variables): bool

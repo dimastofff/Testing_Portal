@@ -9,8 +9,6 @@ class User extends Entity
     protected string $password;
     protected string $role;
     protected string $emailConfirmationHash;
-    protected string $createdAt;
-    protected string $updatedAt;
     protected ?string $emailConfirmedAt;
     protected ?string $lastLoginAt;
 
@@ -64,26 +62,6 @@ class User extends Entity
         $this->__set("emailConfirmationHash", $emailConfirmationHash);
     }
 
-    public function getCreatedAt(): string
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(string $createdAt): void
-    {
-        $this->__set("createdAt", $createdAt);
-    }
-
-    public function getUpdatedAt(): string
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(string $updatedAt): void
-    {
-        $this->__set("updatedAt", $updatedAt);
-    }
-
     public function getEmailConfirmedAt(): ?string
     {
         return $this->emailConfirmedAt;
@@ -102,5 +80,15 @@ class User extends Entity
     public function setLastLoginAt(string $lastLoginAt): void
     {
         $this->__set("lastLoginAt", $lastLoginAt);
+    }
+
+    public function updateSessionTrigger(): void
+    {
+        session_regenerate_id(true);
+        $_SESSION['user'] = [
+            'email' => $this->getEmail(),
+            'role' => $this->getRole(),
+            'isEmailConfirmed' => empty($this->getEmailConfirmationHash()),
+        ];
     }
 }

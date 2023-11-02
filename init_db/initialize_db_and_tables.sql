@@ -8,19 +8,22 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
-
 CREATE TABLE `users` (
   `id` int NOT NULL,
   `email` varchar(40) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `role` enum('User','Moderator','Admin') NOT NULL DEFAULT 'User'
+  `role` enum('User','Moderator','Admin') NOT NULL DEFAULT 'User',
+  `emailConfirmationHash` varchar(255) NOT NULL DEFAULT '',
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `emailConfirmedAt` timestamp NULL DEFAULT NULL,
+  `lastLoginAt` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
 
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`);
-
+  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `emailConfirmationHash` (`emailConfirmationHash`);
 
 ALTER TABLE `users`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;

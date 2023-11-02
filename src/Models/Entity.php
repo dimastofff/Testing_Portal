@@ -5,6 +5,8 @@ namespace App\Models;
 class Entity
 {
     protected array $modifiedProperties = [];
+    protected string $createdAt;
+    protected string $updatedAt;
 
     public function __set($name, $value)
     {
@@ -15,5 +17,25 @@ class Entity
     public function getModifiedProperties(): array
     {
         return $this->modifiedProperties;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->__set("createdAt", $createdAt);
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(string $updatedAt): void
+    {
+        $this->__set("updatedAt", $updatedAt);
     }
 }

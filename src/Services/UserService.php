@@ -15,11 +15,11 @@ class UserService
         $user->setPassword($password);
         $user->setRole(Role::User->name);
         $user->setEmailConfirmationHash(bin2hex(random_bytes(100)));
-        $currentTimestamp = date('Y-m-d H:i:s', time());
-        $user->setCreatedAt($currentTimestamp);
-        $user->setUpdatedAt($currentTimestamp);
-        EmailService::sendConfirmationLetter($user);
-        return EntityRepository::save($user);
+        $isUserSaved = EntityRepository::save($user);
+        if ($isUserSaved) {
+            EmailService::sendConfirmationLetter($user);
+        }
+        return $isUserSaved;
     }
 
     public static function login(string $email, string $password): User
@@ -28,6 +28,8 @@ class UserService
         if (!$user || !$user->checkPassword($password)) {
             throw new \Exception('Unsuccessfull login attempt for email: "' . $email . '"');
         }
+        $user->setLastLoginAt(date('Y-m-d H:i:s', time()));
+        EntityRepository::update($user, ['where' => ['email' => $email]]);
         return $user;
     }
 

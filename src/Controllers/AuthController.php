@@ -40,12 +40,9 @@ class AuthController
         }
 
         try {
-            $user = UserService::login($email, $password);
-            $_SESSION['user'] = [
-                'email' => $user->getEmail(),
-            ];
+            UserService::login($email, $password);
             $GLOBALS['LOGGER']->info('Successfull login for user: "' . $email . '"');
-            Router::redirectWithAlert('success', 'User successfull logged in', '/profile');
+            Router::redirect('/profile');
         } catch (\Exception $e) {
             $GLOBALS['LOGGER']->error($e->getMessage());
             Router::redirectWithAlert('danger', 'Login unsuccessfull', '/login');
@@ -54,7 +51,8 @@ class AuthController
 
     public function logout(): void
     {
-        unset($_SESSION['user']);
+        session_unset();
+        session_destroy();
         Router::redirect('/login');
     }
 
@@ -63,9 +61,8 @@ class AuthController
         try {
             $emailConfirmationHash = $data['hash'];
             if (UserService::emailConfirmation($emailConfirmationHash)) {
-                Router::redirectWithAlert('success', 'Email successfull confirmed. Please login now.', '/login');
+                Router::redirectWithAlert('success', 'Email successfull confirmed', '/login');
             }
-            die();
         } catch (\Exception $e) {
             $GLOBALS['LOGGER']->error($e->getMessage());
             Router::redirectWithAlert('danger', 'Unsuccessfull email confirmation attempt', '/login');
