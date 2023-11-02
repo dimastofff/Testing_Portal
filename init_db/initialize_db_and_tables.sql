@@ -13,11 +13,12 @@ CREATE TABLE `users` (
   `email` varchar(40) NOT NULL,
   `password` varchar(255) NOT NULL,
   `role` enum('User','Moderator','Admin') NOT NULL DEFAULT 'User',
+  `isEmailConfirmed` tinyint(1) NOT NULL DEFAULT '0',
   `emailConfirmationHash` varchar(255) NOT NULL DEFAULT '',
-  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `emailConfirmedAt` timestamp NULL DEFAULT NULL,
-  `lastLoginAt` timestamp NULL DEFAULT NULL
+  `lastLoginAt` timestamp NULL DEFAULT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 ALTER TABLE `users`

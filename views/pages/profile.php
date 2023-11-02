@@ -19,7 +19,7 @@ if (!isset($_SESSION['user'])) {
 <body>
     <?= Page::part('header'); ?>
     <main class="container mt-4 w-25">
-        <h2>Profile</h2>
+        <h2 class="text-center">Profile</h2>
         <p><b>Email:</b>
             <?= $_SESSION['user']['email'] ?>
             <?php
@@ -38,13 +38,13 @@ if (!isset($_SESSION['user'])) {
             <?php
             switch ($_SESSION['user']['role']) {
                 case 'Admin':
-                    ?><span class="badge text-bg-danger">Admin</span><?php
+                    ?><span class="badge text-bg-danger">ADMIN</span><?php
                     break;
                 case 'Moderator':
-                    ?><span class="badge text-bg-info">Moderator</span><?php
+                    ?><span class="badge text-bg-info">MODERATOR</span><?php
                     break;
                 case 'User':
-                    ?><span class="badge text-bg-secondary">User</span><?php
+                    ?><span class="badge text-bg-secondary">USER</span><?php
                     break;
             }
             ?>

@@ -8,12 +8,14 @@ use App\Utils\SqlGenerator;
 
 class EntityRepository
 {
-    public static function getBy(string $entityClassName, array $variables): array
+    public static function getBy(string $entityClassName, array $variables = null): array
     {
         $entity = new $entityClassName();
         $sql = SqlGenerator::generateSelectSql($entity, $variables);
         $statement = self::createStatement($sql);
-        self::prepareStatementFromHash($statement, $variables);
+        if (isset($variables)) {
+            self::prepareStatementFromHash($statement, $variables);
+        }
         $statement->setFetchMode(\PDO::FETCH_CLASS, $entityClassName);
         $statement->execute();
         return $statement->fetchAll();

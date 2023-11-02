@@ -6,12 +6,15 @@ use App\Models\Entity;
 
 class SqlGenerator
 {
-    public static function generateSelectSql(Entity $entity, array $variables): string
+    public static function generateSelectSql(Entity $entity, array $variables = null): string
     {
-        $whereSqlPart = join(' AND ', array_map(fn($column, $value) => $column . ' = :' . $column, array_keys($variables), $variables));
+        if (isset($variables)) {
+            $whereSqlPart = ' WHERE '.join(' AND ', array_map(fn($column, $value) => $column . ' = :' . $column, array_keys($variables), $variables));
+        } else {
+            $whereSqlPart = '';
+        }
         return 'SELECT * FROM '
             . self::getTableName($entity)
-            . ' WHERE '
             . $whereSqlPart;
     }
 

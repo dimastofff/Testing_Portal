@@ -9,6 +9,7 @@ class User extends Entity
     protected string $password;
     protected string $role;
     protected string $emailConfirmationHash;
+    protected bool $isEmailConfirmed;
     protected ?string $emailConfirmedAt;
     protected ?string $lastLoginAt;
 
@@ -62,6 +63,16 @@ class User extends Entity
         $this->__set("emailConfirmationHash", $emailConfirmationHash);
     }
 
+    public function getIsEmailConfirmed(): bool
+    {
+        return $this->isEmailConfirmed;
+    }
+
+    public function setIsEmailConfirmed(bool $isEmailConfirmed): void
+    {
+        $this->__set("isEmailConfirmed", $isEmailConfirmed);
+    }
+
     public function getEmailConfirmedAt(): ?string
     {
         return $this->emailConfirmedAt;
@@ -88,7 +99,7 @@ class User extends Entity
         $_SESSION['user'] = [
             'email' => $this->getEmail(),
             'role' => $this->getRole(),
-            'isEmailConfirmed' => empty($this->getEmailConfirmationHash()),
+            'isEmailConfirmed' => $this->getIsEmailConfirmed(),
         ];
     }
 }

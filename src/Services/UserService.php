@@ -39,6 +39,7 @@ class UserService
         if (!$user) {
             throw new \Exception('Unsuccessfull email confirmation attempt for hash: "' . $emailConfirmationHash . '"');
         }
+        $user->setIsEmailConfirmed(true);
         $user->setEmailConfirmationHash('');
         $user->setEmailConfirmedAt(date('Y-m-d H:i:s', time()));
         return EntityRepository::update($user, ['where' => ['email' => $user->getEmail(), 'id' => $user->getId()]]);

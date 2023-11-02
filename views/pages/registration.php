@@ -18,7 +18,7 @@ if (isset($_SESSION['user'])) {
 <body>
     <?= Page::part('header'); ?>
     <main class="container mt-4 w-25">
-        <h2>Registration</h2>
+        <h2 class="text-center">Registration</h2>
         <form class="mt-4" method="post" action="/auth/registration">
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
