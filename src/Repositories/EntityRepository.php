@@ -40,7 +40,7 @@ class EntityRepository
         self::prepareStatementFromEntity($statement, $entity);
         self::prepareStatementFromHash($statement, $variables);
         $result = $statement->execute();
-        if ($result && $entity instanceof User) {
+        if ($result && $entity instanceof User && isset($_SESSION['user'])) {
             $entity->updateSessionTrigger();
         }
         return $result;
@@ -51,7 +51,7 @@ class EntityRepository
         return true;
     }
 
-    private static function createStatement(string $sql): \PDOStatement
+    protected static function createStatement(string $sql): \PDOStatement
     {
         return $GLOBALS['PDO_CONNECTION']->prepare($sql);
     }
@@ -65,9 +65,9 @@ class EntityRepository
 
     private static function prepareStatementFromHash(\PDOStatement $statement, array $variables) : void
     {
-        if (isset($variables['where'])) {
+        if (isset($variables['WHERE'])) {
             $isWhereConditionBinding = true;
-            $variables = $variables['where'];
+            $variables = $variables['WHERE'];
         } else {
             $isWhereConditionBinding = false;
         }

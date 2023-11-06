@@ -6,23 +6,33 @@ class Router
 {
     private static $list = [];
 
-    public static function page(string $uri, string $pageName): void
-    {
+    public static function page(
+        string $uri,
+        string $pageName,
+        array $permissions = null
+    ): void {
         self::$list[] = [
             'uri' => $uri,
             'page' => $pageName,
             'isControllerHandled' => false,
+            'permissions' => $permissions,
         ];
     }
 
-    public static function controllerHandledRequest(string $uri, string $controllerClassName, string $controllerMethodName, array $data = null)
-    {
+    public static function controllerHandledRequest(
+        string $uri,
+        string $controllerClassName,
+        string $controllerMethodName,
+        array $data = null,
+        array $permissions = null
+    ): void {
         self::$list[] = [
             'uri' => $uri,
             'isControllerHandled' => true,
             'controllerClassName' => $controllerClassName,
             'controllerMethodName' => $controllerMethodName,
             'data' => $data,
+            'permissions' => $permissions,
         ];
     }
 

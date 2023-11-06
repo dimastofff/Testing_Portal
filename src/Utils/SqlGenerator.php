@@ -31,7 +31,7 @@ class SqlGenerator
 
     public static function generateUpdateSql(Entity $entity, array $variables): string
     {
-        $variables = isset($variables['where']) ? $variables['where'] : $variables;
+        $variables = isset($variables['WHERE']) ? $variables['WHERE'] : $variables;
         return 'UPDATE '
             . self::getTableName($entity)
             . ' SET '

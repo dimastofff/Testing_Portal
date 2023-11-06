@@ -4,19 +4,14 @@ namespace App\Models;
 
 class User extends Entity
 {
-    protected int $id;
     protected string $email;
+    protected string $nickname;
     protected string $password;
     protected string $role;
-    protected string $emailConfirmationHash;
+    protected ?string $emailConfirmationHash;
     protected bool $isEmailConfirmed;
     protected ?string $emailConfirmedAt;
     protected ?string $lastLoginAt;
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
 
     public function getEmail(): string
     {
@@ -26,6 +21,16 @@ class User extends Entity
     public function setEmail(string $email): void
     {
         $this->__set("email", $email);
+    }
+
+    public function getNickname(): string
+    {
+        return $this->nickname;
+    }
+
+    public function setNickname(string $nickname): void
+    {
+        $this->__set("nickname", $nickname);
     }
 
     public function getPassword(): string
@@ -53,12 +58,12 @@ class User extends Entity
         $this->__set("role", $role);
     }
 
-    public function getEmailConfirmationHash(): string
+    public function getEmailConfirmationHash(): ?string
     {
         return $this->emailConfirmationHash;
     }
 
-    public function setEmailConfirmationHash(string $emailConfirmationHash): void
+    public function setEmailConfirmationHash(?string $emailConfirmationHash): void
     {
         $this->__set("emailConfirmationHash", $emailConfirmationHash);
     }
@@ -78,7 +83,7 @@ class User extends Entity
         return $this->emailConfirmedAt;
     }
 
-    public function setEmailConfirmedAt(string $emailConfirmedAt): void
+    public function setEmailConfirmedAt(?string $emailConfirmedAt): void
     {
         $this->__set("emailConfirmedAt", $emailConfirmedAt);
     }
@@ -88,7 +93,7 @@ class User extends Entity
         return $this->lastLoginAt;
     }
 
-    public function setLastLoginAt(string $lastLoginAt): void
+    public function setLastLoginAt(?string $lastLoginAt): void
     {
         $this->__set("lastLoginAt", $lastLoginAt);
     }
@@ -97,7 +102,9 @@ class User extends Entity
     {
         session_regenerate_id(true);
         $_SESSION['user'] = [
+            'id' => $this->getId(),
             'email' => $this->getEmail(),
+            'nickname' => $this->getNickname(),
             'role' => $this->getRole(),
             'isEmailConfirmed' => $this->getIsEmailConfirmed(),
         ];

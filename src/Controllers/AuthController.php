@@ -10,16 +10,25 @@ class AuthController
     public function registration(array $data): void
     {
         $email = $data['email'];
+        $nickname = $data['nickname'];
         $password = $data['password'];
         $confirmPassword = $data['confirmPassword'];
 
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL) || $password !== $confirmPassword || strlen($password) < 6) {
+        if (
+            !filter_var($email, FILTER_VALIDATE_EMAIL) ||
+            strlen($email) > 40 ||
+            strlen($nickname) < 4 ||
+            strlen($nickname) > 20 ||
+            $password !== $confirmPassword ||
+            strlen($password) < 6 ||
+            strlen($password) > 15
+        ) {
             $GLOBALS['LOGGER']->error('Incorrect registration form data for user: "' . $email . '"');
             Router::redirectWithAlert('danger', 'Form data incorrect.', '/registration');
         }
 
         try {
-            if (UserService::registration($email, $password)) {
+            if (UserService::registration($email, $nickname, $password)) {
                 $GLOBALS['LOGGER']->info('Successfull registration for user: "' . $email . '"');
                 Router::redirectWithAlert('success', 'User successfull registered.', '/login');
             }
@@ -34,14 +43,22 @@ class AuthController
         $email = $data['email'];
         $password = $data['password'];
 
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($password) < 8 || strlen($password) > 20) {
+        if (
+            !filter_var($email, FILTER_VALIDATE_EMAIL) ||
+            strlen($email) > 40 ||
+            strlen($password) < 6 ||
+            strlen($password) > 15
+        ) {
             $GLOBALS['LOGGER']->error('Incorrect login form data for user: "' . $email . '"');
             Router::redirectWithAlert('danger', 'Form data incorrect', '/login');
         }
 
         try {
-            UserService::login($email, $password);
+            $user = UserService::login($email, $password);
             $GLOBALS['LOGGER']->info('Successfull login for user: "' . $email . '"');
+            if ($user) {
+                $user->updateSessionTrigger();
+            }
             Router::redirect('/profile');
         } catch (\Exception $e) {
             $GLOBALS['LOGGER']->error($e->getMessage());

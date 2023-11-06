@@ -28,6 +28,7 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'Admin') {
                     <th scope="col">#</th>
                     <th scope="col">ID</th>
                     <th scope="col">EMAIL</th>
+                    <th scope="col">NICKNAME</th>
                     <th scope="col">ROLE</th>
                     <th scope="col">IS EMAIL CONFIRMED</th>
                     <th scope="col">EMAIL CONFIRMED AT</th>
@@ -47,6 +48,9 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'Admin') {
                         </td>
                         <td>
                             <? echo $user->getEmail(); ?>
+                        </td>
+                        <td>
+                            <? echo $user->getNickname(); ?>
                         </td>
                         <td>
                             <? echo $user->getRole(); ?>

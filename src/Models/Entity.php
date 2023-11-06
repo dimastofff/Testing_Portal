@@ -5,6 +5,7 @@ namespace App\Models;
 class Entity
 {
     protected array $modifiedProperties = [];
+    protected int $id;
     protected string $createdAt;
     protected string $updatedAt;
 
@@ -17,6 +18,11 @@ class Entity
     public function getModifiedProperties(): array
     {
         return $this->modifiedProperties;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function getCreatedAt(): string
