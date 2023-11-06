@@ -1,10 +1,5 @@
 <?php
 use App\Utils\Page;
-use App\Utils\Router;
-
-if (isset($_SESSION['user'])) {
-    Router::redirect('/profile');
-}
 
 ?>
 
@@ -27,7 +22,8 @@ if (isset($_SESSION['user'])) {
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password" minlength="6" maxlength="15" required>
+                <input type="password" class="form-control" id="password" name="password" minlength="6" maxlength="15"
+                    required>
             </div>
             <button type="submit" class="btn btn-primary">Login</button>
         </form>

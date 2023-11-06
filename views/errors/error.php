@@ -12,10 +12,12 @@ use App\Utils\Page;
 </head>
 
 <body>
-    <?php
-    Page::part('header');
-    echo '<h2>'.$errorMessage.'</h2>';
-    ?>
+    <?= Page::part('header'); ?>
+    <main class="container mt-4 w-25">
+        <h2 class="text-center">
+            <? echo $errorMessage; ?>
+        </h2>
+    </main>
 </body>
 
 </html>

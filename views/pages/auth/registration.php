@@ -1,10 +1,6 @@
 <?php
 use App\Utils\Page;
-use App\Utils\Router;
 
-if (isset($_SESSION['user'])) {
-    Router::redirect('/profile');
-}
 ?>
 
 <!DOCTYPE html>
@@ -26,15 +22,18 @@ if (isset($_SESSION['user'])) {
             </div>
             <div class="mb-3">
                 <label for="nickname" class="form-label">Nickname</label>
-                <input type="text" class="form-control" id="nickname" name="nickname" minlength="4" maxlength="20" required>
+                <input type="text" class="form-control" id="nickname" name="nickname" minlength="4" maxlength="20"
+                    required>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password" minlength="6" maxlength="15" required>
+                <input type="password" class="form-control" id="password" name="password" minlength="6" maxlength="15"
+                    required>
             </div>
             <div class="mb-3">
                 <label for="confirmPassword" class="form-label">Password confirmation</label>
-                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" minlength="6" maxlength="15" required>
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" minlength="6"
+                    maxlength="15" required>
             </div>
             <button type="submit" class="btn btn-primary">Registration</button>
         </form>

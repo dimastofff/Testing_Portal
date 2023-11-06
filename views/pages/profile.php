@@ -1,10 +1,5 @@
 <?php
 use App\Utils\Page;
-use App\Utils\Router;
-
-if (!isset($_SESSION['user'])) {
-    Router::redirect('/login');
-}
 
 ?>
 

@@ -1,12 +1,7 @@
 <?php
 use App\Utils\Page;
-use App\Utils\Router;
 use App\Models\User;
 use App\Repositories\EntityRepository;
-
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'Admin') {
-    Router::redirect('/login');
-}
 
 ?>
 

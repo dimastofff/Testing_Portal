@@ -2,6 +2,8 @@
 
 namespace App\Utils;
 
+use App\Models\Role;
+
 class Router
 {
     private static $list = [];
@@ -9,13 +11,13 @@ class Router
     public static function page(
         string $uri,
         string $pageName,
-        array $permissions = null
+        Role $accessLevelRole = Role::Unauthorized,
     ): void {
         self::$list[] = [
             'uri' => $uri,
             'page' => $pageName,
             'isControllerHandled' => false,
-            'permissions' => $permissions,
+            'accessLevelRole' => $accessLevelRole,
         ];
     }
 
@@ -24,7 +26,7 @@ class Router
         string $controllerClassName,
         string $controllerMethodName,
         array $data = null,
-        array $permissions = null
+        Role $accessLevelRole = Role::Unauthorized,
     ): void {
         self::$list[] = [
             'uri' => $uri,
@@ -32,7 +34,7 @@ class Router
             'controllerClassName' => $controllerClassName,
             'controllerMethodName' => $controllerMethodName,
             'data' => $data,
-            'permissions' => $permissions,
+            'accessLevelRole' => $accessLevelRole,
         ];
     }
 
@@ -42,16 +44,16 @@ class Router
 
         foreach (self::$list as $route) {
             if ($route['uri'] === '/' . $query) {
-                if ($route['isControllerHandled'] === true) {
+                self::resolvePermissions($route['accessLevelRole']);
+                if ($route['isControllerHandled']) {
                     $controllerInstance = new $route['controllerClassName'];
                     $methodName = $route['controllerMethodName'];
                     $data = $route['data'];
                     $controllerInstance->$methodName($data);
-                    die();
                 } else {
                     require_once 'views/pages/' . $route['page'] . '.php';
-                    die();
                 }
+                die();
             }
         }
         self::error('Page not found');
@@ -73,5 +75,17 @@ class Router
     public static function error(string $errorMessage): void
     {
         require_once 'views/errors/error.php';
+    }
+
+    private static function resolvePermissions(Role $accessLevelRole): void
+    {
+        $currentRole = isset($_SESSION['user']) ? Role::fromName($_SESSION['user']['role']) : Role::Unauthorized;
+
+        if ($currentRole->value < $accessLevelRole->value) {
+            self::redirectWithAlert('danger', 'Access denied', $_SESSION['redirectUri']);
+        } else if ($currentRole->value > $accessLevelRole->value && $accessLevelRole === Role::Unauthorized) {
+            self::redirect($_SESSION['redirectUri']);
+        }
+        return;
     }
 }

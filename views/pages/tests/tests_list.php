@@ -1,11 +1,6 @@
 <?php
 use App\Utils\Page;
-use App\Utils\Router;
 use App\Repositories\TestRepository;
-
-if (!isset($_SESSION['user'])) {
-    Router::redirect('/login');
-}
 
 ?>
 
