@@ -15,7 +15,7 @@ use App\Repositories\EntityRepository;
 
 <body>
     <?= Page::part('header'); ?>
-    <main class="container mt-4 w-50">
+    <main class="container my-4 w-50">
         <h2 class="text-center">Users</h2>
         <table class="table table-bordered">
             <thead>

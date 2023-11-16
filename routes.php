@@ -5,9 +5,9 @@ use App\Utils\Router;
 use App\Controllers\AuthController;
 use App\Controllers\TestsController;
 
-Router::page('/', 'auth/login');
-Router::page('/login', 'auth/login');
-Router::page('/registration', 'auth/registration');
+Router::page('/', 'auth/login', Role::Unauthorized, '/profile');
+Router::page('/login', 'auth/login', Role::Unauthorized, '/profile');
+Router::page('/registration', 'auth/registration', Role::Unauthorized, '/profile');
 Router::page('/profile', 'profile', Role::User);
 Router::page('/admin/users', 'admin/users', Role::Admin);
 Router::page('/tests', 'tests/tests_list', Role::User);

@@ -20,6 +20,11 @@ class Entity
         return $this->modifiedProperties;
     }
 
+    public function resetModifiedProperties(): void
+    {
+        $this->modifiedProperties = [];
+    }
+
     public function getId(): int
     {
         return $this->id;

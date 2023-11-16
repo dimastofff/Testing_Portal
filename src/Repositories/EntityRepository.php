@@ -21,7 +21,7 @@ class EntityRepository
         return $statement->fetchAll();
     }
 
-    public static function save(Entity $entity): bool
+    public static function save(Entity $entity): int
     {
         $currentTimestamp = date('Y-m-d H:i:s', time());
         $entity->setCreatedAt($currentTimestamp);
@@ -29,7 +29,9 @@ class EntityRepository
         $sql = SqlGenerator::generateInsertSql($entity);
         $statement = self::createStatement($sql);
         self::prepareStatementFromEntity($statement, $entity);
-        return $statement->execute();
+        $statement->execute();
+        $entity->resetModifiedProperties();
+        return $GLOBALS['PDO_CONNECTION']->lastInsertId();
     }
 
     public static function update(Entity $entity, array $variables): bool
@@ -43,6 +45,7 @@ class EntityRepository
         if ($result && $entity instanceof User && isset($_SESSION['user'])) {
             $entity->updateSessionTrigger();
         }
+        $entity->resetModifiedProperties();
         return $result;
     }
 

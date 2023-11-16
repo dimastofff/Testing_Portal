@@ -13,7 +13,7 @@ use App\Utils\Page;
 
 <body>
     <?= Page::part('header'); ?>
-    <main class="container mt-4 w-25">
+    <main class="container my-4 w-25">
         <h2 class="text-center">
             <? echo $errorMessage; ?>
         </h2>

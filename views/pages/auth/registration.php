@@ -13,9 +13,9 @@ use App\Utils\Page;
 
 <body>
     <?= Page::part('header'); ?>
-    <main class="container mt-4 w-25">
+    <main class="container my-4 w-25">
         <h2 class="text-center">Registration</h2>
-        <form class="mt-4" method="post" action="/auth/registration">
+        <form class="my-4" method="post" action="/auth/registration">
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
                 <input type="email" class="form-control" id="email" name="email" maxlength="40" required>

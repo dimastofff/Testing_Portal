@@ -14,7 +14,7 @@ class Page
         if (isset($_COOKIE['alert-type']) && isset($_COOKIE['alert-message'])) {
             $alertType = $_COOKIE['alert-type'];
             $alertMessage = $_COOKIE['alert-message'];
-            echo '<div class="container w-25 mt-4 alert alert-'.$alertType.' role="alert">
+            echo '<div class="container w-25 my-4 alert alert-'.$alertType.' role="alert">
                     '.$alertMessage.'
                   </div>';
         }

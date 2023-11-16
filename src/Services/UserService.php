@@ -7,18 +7,16 @@ use App\Repositories\EntityRepository;
 
 class UserService
 {
-    public static function registration(string $email, string $nickname, string $password): bool
+    public static function registration(string $email, string $nickname, string $password): int
     {
         $user = new User();
         $user->setEmail($email);
         $user->setNickname($nickname);
         $user->setPassword($password);
         $user->setEmailConfirmationHash(bin2hex(random_bytes(100)));
-        $isUserSaved = EntityRepository::save($user);
-        if ($isUserSaved) {
-            EmailService::sendConfirmationLetter($user);
-        }
-        return $isUserSaved;
+        $userId = EntityRepository::save($user);
+        EmailService::sendConfirmationLetter($user);
+        return $userId;
     }
 
     public static function login(string $email, string $password): User
